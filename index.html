@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I. Rafael Salgado | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <style>
+        body {
+            margin: 0;
+            background-color: #191919;
+            color: #eee;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           FONDO ANIMADO
+           ========================================= */
+        #blackhole-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        #blackhole {
+            height: 100%;
+            width: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        #blackhole canvas {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            opacity: 0.8;
+        }
+
+        .centerHover {
+            width: 255px;
+            height: 255px;
+            background-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            cursor: pointer;
+            line-height: 255px;
+            text-align: center;
+            transition: all 500ms;
+        }
+
+        .centerHover.open {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .centerHover span {
+            color: #77ebe6;
+            font-family: serif;
+            font-size: 18px;
+            position: relative;
+            transition: all 500ms;
+            letter-spacing: 2px;
+        }
+
+        /* =========================================
+           ESTILOS MINIMALISTAS
+           ========================================= */
+        #portfolio-content {
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            padding-bottom: 100px;
+            pointer-events: none;
+        }
+
+        .content-active {
+            pointer-events: auto !important;
+        }
+
+        .minimal-link {
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .minimal-link:hover {
+            color: #fff;
+        }
+
+        .minimal-border {
+            border: 1px solid #333;
+            transition: border-color 0.3s;
+        }
+
+        .minimal-border:hover {
+            border-color: #77ebe6;
+        }
+
+        .glass-panel {
+            background: rgba(25, 25, 25, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #77ebe6 0%, #eab308 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .btn-minimal {
+            background: #111;
+            border: 1px solid #333;
+            color: #aaa;
+            transition: border-color 0.3s, color 0.3s;
+        }
+
+        .btn-minimal:hover {
+            border-color: #77ebe6;
+            color: #fff;
+        }
+
+        .tag-minimal {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #222;
+        }
+
+        /* =========================================
+           SKILLS (Horizontal Stack)
+           ========================================= */
+        :root {
+            --item-size: clamp(3rem, 1rem + 5vw, 4.5rem);
+            --overlap-offset: calc(var(--item-size) / 2);
+            --shadow-color: 0deg 0% 0%;
+        }
+
+        .horizontal-stack {
+            cursor: pointer;
+            list-style: none;
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: calc(var(--item-size) - var(--overlap-offset));
+            place-content: center;
+            padding: 2em;
+            margin: 0;
+        }
+
+        .item {
+            display: grid;
+            place-self: center;
+            inline-size: var(--item-size);
+            block-size: var(--item-size);
+            border-radius: 50%;
+            background: var(--bg-color);
+            position: relative;
+            box-shadow: -6px 0px 10px -3px hsl(var(--shadow-color) / 0.3);
+            transition: transform 500ms ease;
+            isolation: isolate;
+            text-align: center;
+        }
+
+        .item i {
+            display: grid;
+            font-size: 2em;
+            place-content: center;
+            place-self: center;
+            color: #6d6d6d;
+            position: absolute;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            border-radius: inherit;
+            background-color: #1a1a1a;
+            transition: color 0.3s;
+        }
+
+        .item:hover {
+            transform: scale(1.25);
+            z-index: 10;
+            box-shadow: unset;
+            filter: saturate(140%);
+        }
+
+        .item:hover i {
+            color: var(--bg-color);
+        }
+
+        .item[data-color] {
+            --bg-color: attr(data-color color, #fff);
+        }
+
+        @supports (selector(:has(*))) {
+            .item {
+                transition: transform 700ms;
+                transition-timing-function: linear(0, 0.79 14.4%, 1.026 22.4%, 1.164 31.2%, 1.207 38.2%, 1.208 46.2%, 1.033 80%, 1);
+            }
+
+            .horizontal-stack:has(.item:hover) .item:hover~.item {
+                transform: translateX(calc(min(15px * (sibling-count() - sibling-index()), var(--overlap-offset))));
+            }
+
+            .horizontal-stack:has(.item:hover) .item:has(~ .item:hover) {
+                transform: translateX(calc(-1 * min(15px * (sibling-index() - 1), var(--overlap-offset))));
+            }
+        }
+
+        /* =========================================
+           CHATBOT HOMERO AI
+           ========================================= */
+        #chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #eab308;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 40;
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease, transform 0.3s;
+        }
+
+        #chatbot-btn:hover {
+            transform: scale(1.1);
+        }
+
+        #chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 320px;
+            height: 450px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            z-index: 40;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: sans-serif;
+            font-size: 13px;
+        }
+
+        .msg-bot {
+            background: #333;
+            padding: 10px;
+            border-radius: 10px 10px 10px 0;
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .msg-user {
+            background: #eab308;
+            color: #000;
+            padding: 10px;
+            border-radius: 10px 10px 0 10px;
+            align-self: flex-end;
+            max-width: 85%;
+            font-weight: bold;
+        }
+
+        .msg-thinking {
+            background: transparent;
+            color: #888;
+            font-style: italic;
+            font-size: 12px;
+            align-self: flex-start;
+        }
+
+        #chat-options-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-top: 1px solid #333;
+            padding: 10px;
+            background: #111;
+        }
+
+        .chat-option-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #77ebe6;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1 1 auto;
+            text-align: center;
+        }
+
+        .chat-option-btn:hover {
+            background: #333;
+            border-color: #77ebe6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="blackhole-bg">
+        <div id="blackhole">
+            <div class="centerHover" id="enter-btn"><span>ENTER</span></div>
+        </div>
+    </div>
+
+    <div id="portfolio-content" class="max-w-6xl mx-auto px-6 pt-20">
+
+        <header class="flex justify-between items-center mb-16">
+            <h1 class="text-xl font-bold tracking-widest bg-black/30 px-2 py-1 rounded">I.RAFAEL</h1>
+            <div class="space-x-4 text-xs text-gray-500 glass-panel px-3 py-1 rounded">
+                <button onclick="setLang('en')" id="lang-en" class="text-white hover:text-white transition">EN</button>
+                <span>/</span>
+                <button onclick="setLang('es')" id="lang-es" class="hover:text-white transition">ES</button>
+            </div>
+        </header>
+
+        <section class="h-[90vh] flex flex-col justify-center items-center text-center relative mb-24">
+            <div class="glass-panel p-10 rounded-xl z-10 minimal-border">
+                <p class="text-xs tracking-wider text-gray-500 mb-1" data-i18n="role">AI BSc Student (UAEM, 6th)</p>
+                <p class="text-sm text-gray-400 mb-2" data-i18n="hello">HELLO! I'M</p>
+                <h2 class="text-5xl md:text-7xl font-bold tracking-widest text-gray-100 mb-4">I. Rafael Salgado F.</h2>
+                <p class="text-xl md:text-3xl font-light leading-tight text-gray-300 min-h-[40px] mb-8">
+                    <span class="text-gradient" id="category-scroller">PROGRAMMER</span>
+                </p>
+                <p class="text-sm text-gray-500 max-w-xl mx-auto mb-10" data-i18n="description">
+                    Building intelligent systems at the intersection of cognitive robotics and data science. Exploring
+                    the cosmos and the code.
+                </p>
+                <div class="flex space-x-4 justify-center">
+                    <a href="#proyectos"
+                        class="px-6 py-3 btn-minimal rounded-md text-xs tracking-widest flex items-center"><span
+                            data-i18n="view_projects">VIEW PROJECTS</span> <i class="fas fa-arrow-right ml-2"
+                            style="color: #77ebe6;"></i></a>
+                    <a href="./CV_Rafael_Salgado.pdf" download="CV_Rafael_Salgado.pdf"
+                        class="px-6 py-3 btn-minimal rounded-md text-xs tracking-widest flex items-center"><span
+                            data-i18n="resume">RESUME & CV</span> <i class="fas fa-file-pdf ml-2"
+                            style="color: #77ebe6;"></i></a>
+                </div>
+            </div>
+        </section>
+
+
+
+        <section id="sobremi" class="mb-20">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-10 glass-panel inline-block px-2 py-1 rounded"
+                data-i18n="aboutme_title">Who I Am</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                    class="md:col-span-1 p-8 minimal-border border-sky-900 rounded-lg glass-panel flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs tracking-wider text-gray-500 mb-4 flex items-center"><i
+                                class="fas fa-map-marker-alt mr-2" style="color: #77ebe6;"></i> LOCATION</p>
+                        <h4 class="text-3xl text-gray-100 mb-1">MORELOS, MX</h4>
+                        <p class="text-xs text-gray-500 mb-4">Universidad Autónoma del Estado de Morelos</p>
+                    </div>
+                    <p class="text-xs font-mono text-gray-600 bg-black/30 p-2 rounded">18.9221° N, 99.2343° W <br> GMT-6
+                        UAEM Time</p>
+                </div>
+                <div class="md:col-span-2 p-8 minimal-border rounded-lg glass-panel">
+                    <p class="text-xs tracking-wider text-gray-500 mb-4 flex items-center"><i class="fas fa-user mr-2"
+                            style="color: #77ebe6;"></i> ABOUT</p>
+                    <p class="text-gray-300 text-sm mb-6" data-i18n="bio_text">
+                        I'm I. Rafael Salgado F., a 6th-semester BSc student in AI at UAEM. My biggest driver is the
+                        constant search for knowledge and the creation of functional solutions. I am passionate about
+                        applying artificial intelligence to solve real problems in robotics and data science.
+                    </p>
+                    <p class="text-sm italic text-gray-500 bg-black/20 p-3 rounded minimal-border" data-i18n="quote">
+                        "Transforming algorithms into motion and data into stars."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="educacion" class="mb-24">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-10 glass-panel inline-block px-2 py-1 rounded"
+                data-i18n="edu_title">Education & Achievements</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-brain text-2xl" style="color: #77ebe6;"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_lab1">Computational Semantics Lab</h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_lab1_desc">Current member.</span></p>
+                    </div>
+                </div>
+
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-robot text-2xl text-purple-400"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_lab2">Cognitive Robotics Lab</h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_lab2_desc">Active participation during 3rd and 4th semesters.</span></p>
+                    </div>
+                </div>
+
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-trophy text-2xl text-amber-400"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_robo">2nd Place - RoboTecLab</h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_robo_desc">Soccer Robots Category.</span></p>
+                    </div>
+                </div>
+
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-certificate text-2xl text-blue-400"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_coloquios">AI Challenge - UAEM Colloquiums
+                        </h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_coloquios_desc">Participation in 1st National [cite: 71] & 2nd AI
+                                Colloquium[cite: 29].</span></p>
+                    </div>
+                </div>
+
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-network-wired text-2xl text-green-400"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_taller">Neuroscience Workshop</h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_taller_desc">Attended: Higher-Order Interactions in Neuroscience.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-6 minimal-border rounded-lg glass-panel flex items-start group">
+                    <div class="mr-6 mt-1"><i class="fas fa-file-excel text-2xl text-green-600"></i></div>
+                    <div>
+                        <h4 class="text-xl text-gray-100 mb-1" data-i18n="edu_excel">Excel Certification</h4>
+                        <p class="text-sm text-gray-400 mb-2"><span class="text-gray-500 italic"
+                                data-i18n="edu_excel_desc">Awarded by Santander.</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-24 flex flex-col items-center">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4 glass-panel inline-block px-2 py-1 rounded"
+                data-i18n="skills_title">Tech Stack</h3>
+            <div class="w-full overflow-x-auto pb-8 pt-4 custom-scrollbar">
+                <ul class="horizontal-stack">
+                    <li class="item" style="--bg-color: #A8B9CC;" title="C"><i class="devicon-c-plain"></i></li>
+                    <li class="item" style="--bg-color: #00599C;" title="C++"><i class="devicon-cplusplus-plain"></i>
+                    </li>
+                    <li class="item" style="--bg-color: #007396;" title="Java"><i class="devicon-java-plain"></i></li>
+                    <li class="item" style="--bg-color: #3776AB;" title="Python"><i class="devicon-python-plain"></i>
+                    </li>
+                    <li class="item" style="--bg-color: #E34F26;" title="HTML"><i class="devicon-html5-plain"></i></li>
+                    <li class="item" style="--bg-color: #1572B6;" title="CSS"><i class="devicon-css3-plain"></i></li>
+                    <li class="item" style="--bg-color: #F7DF1E;" title="JavaScript"><i
+                            class="devicon-javascript-plain"></i></li>
+                    <li class="item" style="--bg-color: #47A248;" title="Godot"><i class="devicon-godot-plain"></i></li>
+                    <li class="item" style="--bg-color: #336791;" title="SQL"><i class="fas fa-database"></i></li>
+                    <li class="item" style="--bg-color: #47A248;" title="MongoDB"><i class="devicon-mongodb-plain"></i>
+                    </li>
+                    <li class="item" style="--bg-color: #FF5A5F;" title="ChromaDB"><i class="fas fa-vector-square"></i>
+                    </li>
+                    <li class="item" style="--bg-color: #005571;" title="ElasticSearch"><i class="fas fa-search"></i>
+                    </li>
+                    <li class="item" style="--bg-color: #FCC624;" title="Linux"><i class="devicon-linux-plain"></i></li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="proyectos" class="mb-24">
+            <h3 class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-10 glass-panel inline-block px-2 py-1 rounded"
+                data-i18n="work">Selected Work</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="p-8 minimal-border border-sky-900 rounded-lg glass-panel flex flex-col justify-between group">
+                    <div class="mb-6">
+                        <div class="w-2 h-2 rounded-full mb-4" style="background-color: #77ebe6;"></div>
+                        <h4 class="text-2xl mb-2 text-gray-100" data-i18n="proj1_title">Socratic Mental Health Chatbot
+                        </h4>
+                        <p class="text-sm text-gray-400 mb-4" data-i18n="proj1_desc">Chatbot with RAG architecture using
+                            the Socratic Method for mental health reflective support.</p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tag-minimal border border-sky-900" style="color: #77ebe6;">RAG</span>
+                            <span class="tag-minimal border border-sky-900" style="color: #77ebe6;">ChromaDB</span>
+                            <span class="tag-minimal border border-sky-900" style="color: #77ebe6;">Python</span>
+                        </div>
+                        <a href="https://github.com/MrChayote/Socratic_Mental_Health_Chatbot" target="_blank"
+                            class="text-xs minimal-link tracking-wider font-bold text-gray-300" data-i18n="view">VIEW
+                            GITHUB ↗</a>
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 minimal-border border-purple-900 rounded-lg glass-panel flex flex-col justify-between group">
+                    <div class="mb-6">
+                        <div class="w-2 h-2 rounded-full bg-purple-400 mb-4"></div>
+                        <h4 class="text-2xl mb-2 text-gray-100" data-i18n="proj2_title">Astro CNN Classifier</h4>
+                        <p class="text-sm text-gray-400 mb-4" data-i18n="proj2_desc">Convolutional Neural Network
+                            capable of classifying astronomical images from the SpaceNet dataset.</p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tag-minimal border border-purple-900 text-purple-400">Deep Learning</span>
+                            <span class="tag-minimal border border-purple-900 text-purple-400">CNN</span>
+                            <span class="tag-minimal border border-purple-900 text-purple-400">SpaceNet</span>
+                        </div>
+                        <a href="https://github.com/MrChayote/Astro_CNN_Classifier" target="_blank"
+                            class="text-xs minimal-link tracking-wider font-bold text-gray-300" data-i18n="view">VIEW
+                            GITHUB ↗</a>
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 minimal-border border-amber-900 rounded-lg glass-panel flex flex-col justify-between group">
+                    <div class="mb-6">
+                        <div class="w-2 h-2 rounded-full bg-amber-400 mb-4"></div>
+                        <h4 class="text-2xl mb-2 text-gray-100" data-i18n="proj3_title">LEGO Bridge Simulation</h4>
+                        <p class="text-sm text-gray-400 mb-4" data-i18n="proj3_desc">Godot physics simulation to find
+                            the optimal LEGO bridge configuration for a firetruck.</p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tag-minimal border border-amber-900 text-amber-400">Godot</span>
+                            <span class="tag-minimal border border-amber-900 text-amber-400">Physics Simulation</span>
+                        </div>
+                        <a href="https://github.com/MrChayote/project-4th-semester-optimization-" target="_blank"
+                            class="text-xs minimal-link tracking-wider font-bold text-gray-300" data-i18n="view">VIEW
+                            GITHUB ↗</a>
+                    </div>
+                </div>
+
+                <div
+                    class="p-8 minimal-border border-blue-900 rounded-lg glass-panel flex flex-col justify-between group">
+                    <div class="mb-6">
+                        <div class="w-2 h-2 rounded-full bg-blue-400 mb-4"></div>
+                        <h4 class="text-2xl mb-2 text-gray-100" data-i18n="proj4_title">Sleep Transitions Analysis</h4>
+                        <p class="text-sm text-gray-400 mb-4" data-i18n="proj4_desc">Brain connectivity data analysis
+                            (EDA) and ML models to predict sleep phase transitions.</p>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tag-minimal border border-blue-900 text-blue-300">Machine Learning</span>
+                            <span class="tag-minimal border border-blue-900 text-blue-300">EEG</span>
+                        </div>
+                        <a href="https://github.com/MrChayote/Analisis-Transiciones-Sueno" target="_blank"
+                            class="text-xs minimal-link tracking-wider font-bold text-gray-300" data-i18n="view">VIEW
+                            GITHUB ↗</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <footer
+            class="border-t border-gray-800 pt-10 pb-10 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 glass-panel px-4 rounded-t-lg">
+            <p data-i18n="location_footer">Based in Morelos, UAEM, Mexico.</p>
+            <div class="space-x-6 mt-4 md:mt-0">
+                <a href="https://github.com/MrChayote" target="_blank" class="minimal-link">GitHub</a>
+                <a href="mailto:irving.r.salgado@gmail.com" class="minimal-link">Email</a>
+            </div>
+            <p class="text-gray-600 mt-4 md:mt-0 italic">© 2026 I. Rafael Salgado F.</p>
+        </footer>
+    </div>
+
+    <div id="chatbot-btn" onclick="toggleChat()">
+        <i class="fas fa-robot text-2xl text-black"></i>
+    </div>
+
+    <div id="chatbot-window">
+        <div class="bg-yellow-500 text-black p-3 font-bold flex justify-between items-center rounded-t-lg font-sans">
+            <span>Homero.AI (Beta)</span>
+            <button onclick="toggleChat()" class="text-black hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="chat-messages"></div>
+        <div id="chat-options-area"></div>
+    </div>
+
+    <script>
+        /* ---------------------------------------------------
+           LÓGICA DEL AGUJERO NEGRO (Velocidad 100 y Partículas Grandes)
+           --------------------------------------------------- */
+        function blackhole(element) {
+            const container = document.querySelector(element);
+            const cw = container.offsetWidth; const ch = container.offsetHeight;
+            const maxorbit = 255; const centery = ch / 2; const centerx = cw / 2;
+            const startTime = new Date().getTime(); let currentTime = 0;
+            const stars = []; let collapse = false; let expanse = false; let returning = false;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = cw; canvas.height = ch;
+            container.appendChild(canvas);
+            const context = canvas.getContext("2d");
+            context.globalCompositeOperation = "multiply";
+
+            function setDPI(canvas, dpi) {
+                if (!canvas.style.width) canvas.style.width = canvas.width + 'px';
+                if (!canvas.style.height) canvas.style.height = canvas.height + 'px';
+                const scaleFactor = dpi / 96;
+                canvas.width = Math.ceil(canvas.width * scaleFactor);
+                canvas.height = Math.ceil(canvas.height * scaleFactor);
+                const ctx = canvas.getContext('2d');
+                ctx.scale(scaleFactor, scaleFactor);
+            }
+
+            function rotate(cx, cy, x, y, angle) {
+                const radians = angle; const cos = Math.cos(radians); const sin = Math.sin(radians);
+                return [(cos * (x - cx)) + (sin * (y - cy)) + cx, (cos * (y - cy)) - (sin * (x - cx)) + cy];
+            }
+
+            setDPI(canvas, 192);
+
+            class Star {
+                constructor() {
+                    const rands = [Math.random() * (maxorbit / 2) + 1, Math.random() * (maxorbit / 2) + maxorbit];
+                    this.orbital = (rands.reduce((p, c) => p + c, 0) / rands.length);
+                    this.x = centerx; this.y = centery + this.orbital; this.yOrigin = centery + this.orbital;
+                    this.speed = (Math.floor(Math.random() * 1.5) + 0.5) * Math.PI / 180;
+                    this.rotation = 0; this.startRotation = (Math.floor(Math.random() * 360) + 1) * Math.PI / 180;
+                    this.id = stars.length;
+                    this.collapseBonus = this.orbital - (maxorbit * 0.7);
+                    if (this.collapseBonus < 0) this.collapseBonus = 0;
+                    this.color = 'rgba(119, 235, 230, 0.8)' + (1 - ((this.orbital) / 255)) + ')';
+                    this.hoverPos = centery + (maxorbit / 2) + this.collapseBonus;
+                    this.expansePos = centery + (this.id % 100) * -10 + (Math.floor(Math.random() * 20) + 1);
+                    this.prevR = this.startRotation; this.prevX = this.x; this.prevY = this.y;
+                    this.originalY = this.yOrigin;
+                    stars.push(this);
+                }
+
+                draw() {
+                    if (!expanse && !returning) {
+                        this.rotation = this.startRotation + (currentTime * this.speed);
+                        if (!collapse) {
+                            if (this.y > this.yOrigin) this.y -= 2.5;
+                            if (this.y < this.yOrigin - 4) this.y += (this.yOrigin - this.y) / 10;
+                        } else {
+                            if (this.y > this.hoverPos) this.y -= (this.hoverPos - this.y) / -5;
+                            if (this.y < this.hoverPos - 4) this.y += 2.5;
+                        }
+                    } else if (expanse && !returning) {
+                        this.rotation = this.startRotation + (currentTime * (this.speed / 2));
+                        if (this.y > this.expansePos) this.y -= Math.floor(this.expansePos - this.y) / -80;
+                    } else if (returning) {
+                        this.rotation = this.startRotation + (currentTime * this.speed);
+                        if (Math.abs(this.y - this.originalY) > 2) this.y += (this.originalY - this.y) / 100;
+                        else { this.y = this.originalY; this.yOrigin = this.originalY; }
+                    }
+
+                    context.save();
+                    context.fillStyle = this.color; context.strokeStyle = this.color; context.beginPath();
+                    const oldPos = rotate(centerx, centery, this.prevX, this.prevY, -this.prevR);
+                    context.moveTo(oldPos[0], oldPos[1]); context.translate(centerx, centery);
+                    context.rotate(this.rotation); context.translate(-centerx, -centery);
+                    context.lineTo(this.x, this.y); context.stroke(); context.restore();
+                    this.prevR = this.rotation; this.prevX = this.x; this.prevY = this.y;
+                }
+            }
+
+            const centerHover = document.querySelector('.centerHover');
+
+            centerHover.addEventListener('click', function () {
+                collapse = false; expanse = true; returning = false;
+                this.classList.add('open');
+
+                setTimeout(() => {
+                    const portfolio = document.getElementById('portfolio-content');
+                    portfolio.style.opacity = '1';
+                    portfolio.classList.add('content-active');
+
+                    const chatbotBtn = document.getElementById('chatbot-btn');
+                    chatbotBtn.style.opacity = '1';
+                    chatbotBtn.style.pointerEvents = 'auto';
+                }, 1000);
+
+                setTimeout(() => {
+                    expanse = false; returning = true;
+                    setTimeout(() => { returning = false; }, 15000);
+                }, 15000);
+            });
+
+            centerHover.addEventListener('mouseover', function () { if (!expanse) collapse = true; });
+            centerHover.addEventListener('mouseout', function () { if (!expanse) collapse = false; });
+
+            function loop() {
+                const now = new Date().getTime();
+                currentTime = (now - startTime) / 50;
+                context.fillStyle = 'rgba(25,25,25,0.2)';
+                context.fillRect(0, 0, cw, ch);
+                for (let i = 0; i < stars.length; i++) { if (stars[i] !== undefined) stars[i].draw(); }
+                requestAnimationFrame(loop);
+            }
+
+            function init() {
+                context.fillStyle = 'rgba(25,25,25,1)'; context.fillRect(0, 0, cw, ch);
+                for (let i = 0; i < 2500; i++) { new Star(); }
+                loop();
+            }
+            init();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { blackhole('#blackhole'); });
+
+        /* ---------------------------------------------------
+           TRADUCTOR
+           --------------------------------------------------- */
+        let currentLang = 'en';
+        const carouselTexts = {
+            en: ["PROGRAMMER", "AI DEVELOPER", "ROBOTICS ENGINEER", "DATA SCIENTIST", "TECH BUILDER", "FREELANCE"],
+            es: ["PROGRAMADOR", "DESARROLLADOR IA", "INGENIERO ROBÓTICO", "CIENTÍFICO DE DATOS", "CREADOR TECNOLÓGICO", "FREELANCE"]
+        };
+
+        const translations = {
+            en: {
+                role: "AI BSc Student (UAEM, 6th)", hello: "HELLO! I'M",
+                description: "Building intelligent systems at the intersection of cognitive robotics and data science. Exploring the cosmos and the code.",
+                view_projects: "VIEW PROJECTS", resume: "RESUME & CV", work: "Selected Work",
+                proj1_title: "Socratic Mental Health Chatbot", proj1_desc: "Chatbot with RAG architecture using the Socratic Method for mental health reflective support.",
+                proj2_title: "Astro CNN Classifier", proj2_desc: "Convolutional Neural Network capable of classifying astronomical images from the SpaceNet dataset.",
+                proj3_title: "LEGO Bridge Simulation", proj3_desc: "Godot physics simulation to find the optimal LEGO bridge configuration for a firetruck.",
+                proj4_title: "Sleep Transitions Analysis", proj4_desc: "Brain connectivity data analysis (EDA) and ML models to predict sleep phase transitions.",
+                view: "VIEW GITHUB ↗", aboutme_title: "Who I Am",
+                bio_text: "I'm I. Rafael Salgado F., a 6th-semester BSc student in AI at UAEM. My biggest driver is the constant search for knowledge and the creation of functional solutions. I am passionate about applying artificial intelligence to solve real problems in robotics and data science.",
+                quote: "\"Transforming algorithms into motion and data into stars.\"", skills_title: "Tech Stack", location_footer: "Based in Morelos, UAEM, Mexico.",
+
+                // Traducciones de Educación
+                edu_title: "Education & Achievements",
+                edu_lab1: "Computational Semantics Lab", edu_lab1_desc: "Current member.",
+                edu_lab2: "Cognitive Robotics Lab", edu_lab2_desc: "Active participation during 3rd and 4th semesters.",
+                edu_robo: "2nd Place - RoboTecLab", edu_robo_desc: "Soccer Robots Category.",
+                edu_coloquios: "AI Challenge - UAEM Colloquiums", edu_coloquios_desc: "Participation in 1st National [cite: 71] & 2nd AI Colloquium[cite: 29].",
+                edu_taller: "Neuroscience Workshop", edu_taller_desc: "Attended: Higher-Order Interactions in Neuroscience.",
+                edu_excel: "Excel Certification", edu_excel_desc: "Awarded by Santander."
+            },
+            es: {
+                role: "Estudiante Lic. en IA (UAEM, 6to)", hello: "¡HOLA! SOY",
+                description: "Construyendo sistemas inteligentes en la intersección de la robótica cognitiva y la ciencia de datos. Explorando el cosmos y el código.",
+                view_projects: "VER PROYECTOS", resume: "RESUME & CV", work: "Trabajo Seleccionado",
+                proj1_title: "Chatbot Socrático (Salud Mental)", proj1_desc: "Chatbot con arquitectura RAG que usa el Método Socrático para acompañamiento reflexivo.",
+                proj2_title: "Astro CNN Classifier", proj2_desc: "Red Neuronal Convolucional (CNN) capaz de clasificar imágenes astronómicas del dataset SpaceNet.",
+                proj3_title: "Simulación de Puente LEGO", proj3_desc: "Simulación de físicas en Godot para optimizar la estructura de un puente para un camión de bomberos.",
+                proj4_title: "Análisis Transiciones de Sueño", proj4_desc: "Análisis EDA y Machine Learning sobre datos de conectividad cerebral para predecir fases de sueño.",
+                view: "VER GITHUB ↗", aboutme_title: "Quién Soy",
+                bio_text: "Soy I. Rafael Salgado F., estudiante de 6to semestre de Licenciatura en IA en la UAEM. Mi mayor impulso es la búsqueda constante de conocimiento y la creación de soluciones funcionales. Me apasiona aplicar la inteligencia artificial para resolver problemas reales en robótica y ciencia de datos.",
+                quote: "\"Transformando algoritmos en movimiento y datos en estrellas.\"", skills_title: "Habilidades", location_footer: "Basado en Morelos, UAEM, México.",
+
+                // Traducciones de Educación
+                edu_title: "Trayectoria Académica",
+                edu_lab1: "Laboratorio de Semántica Computacional", edu_lab1_desc: "Miembro actual.",
+                edu_lab2: "Laboratorio de Robótica Cognitiva", edu_lab2_desc: "Participación activa durante el 3er y 4to semestre.",
+                edu_robo: "2do Lugar - Torneo RoboTecLab", edu_robo_desc: "Categoría de Robots Futboleros.",
+                edu_coloquios: "Reto IA - Coloquios de IA UAEM", edu_coloquios_desc: "Participación en el 1er Coloquio Nacional [cite: 71] y 2do Coloquio[cite: 29].",
+                edu_taller: "Taller de Neurociencia", edu_taller_desc: "Asistencia al Taller: Interacciones de Alto Orden en Neurociencia.",
+                edu_excel: "Certificación en Excel", edu_excel_desc: "Otorgado por Santander."
+            }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.innerHTML = translations[lang][key]; // innerHTML para que funcionen las negritas o spans si hay
+            });
+            document.getElementById('lang-es').classList.toggle('text-white', lang === 'es');
+            document.getElementById('lang-es').classList.toggle('text-gray-500', lang !== 'es');
+            document.getElementById('lang-en').classList.toggle('text-white', lang === 'en');
+            document.getElementById('lang-en').classList.toggle('text-gray-500', lang !== 'en');
+            initChat();
+            isDeleting = true; typeSpeed = 10;
+        }
+
+        const scroller = document.getElementById('category-scroller');
+        let textIndex = 0; let charIndex = 0; let isDeleting = false; let typeSpeed = 100;
+
+        function typeEffect() {
+            const currentList = carouselTexts[currentLang];
+            if (textIndex >= currentList.length) textIndex = 0;
+            const currentText = currentList[textIndex];
+
+            if (isDeleting) { scroller.innerText = currentText.substring(0, charIndex - 1); charIndex--; }
+            else { scroller.innerText = currentText.substring(0, charIndex + 1); charIndex++; }
+
+            if (!isDeleting && charIndex === currentText.length) { isDeleting = true; typeSpeed = 2000; }
+            else if (isDeleting && charIndex <= 0) { isDeleting = false; charIndex = 0; textIndex = (textIndex + 1) % currentList.length; typeSpeed = 500; }
+            else { typeSpeed = isDeleting ? 50 : 100; }
+            setTimeout(typeEffect, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', () => { setTimeout(typeEffect, 1000); initChat(); });
+
+        /* ---------------------------------------------------
+           LÓGICA SKILLS (Fallback CSS)
+           --------------------------------------------------- */
+        const list = document.querySelector(".horizontal-stack");
+        const modernCSS = CSS.supports("sibling-index()", "0") || CSS.supports("sibling-count()", "0");
+        if (!modernCSS) {
+            const items = [...list.querySelectorAll(".item")];
+            const total = items.length;
+            const applyTransform = (hoverIndex) => {
+                const sizes = items.map((item) => item.offsetWidth);
+                for (const [i, item] of items.entries()) {
+                    const overlapOffset = sizes[i] / 2;
+                    const move = i > hoverIndex ? Math.min(15 * (total - i - 1), overlapOffset) : i < hoverIndex ? -Math.min(15 * i, overlapOffset) : 0;
+                    const transform = move ? `translateX(${move}px)` : "";
+                    if (item.style.transform !== transform) item.style.transform = transform;
+                }
+            };
+            const resetTransforms = () => items.forEach((item) => (item.style.transform = ""));
+            let frame; const start = (fn) => { cancelAnimationFrame(frame); frame = requestAnimationFrame(fn); };
+            list.addEventListener("mouseenter", (e) => { const item = e.target.closest(".item"); if (!item) return; start(() => applyTransform(items.indexOf(item))); }, true);
+            list.addEventListener("mouseleave", () => start(resetTransforms));
+        }
+
+        /* ---------------------------------------------------
+           CHATBOT HOMERO AI
+           --------------------------------------------------- */
+        const chatFlow = {
+            es: {
+                start: {
+                    msg: "¡Mmm... algoritmos! Digo, ¡Hola! Soy el asistente de I. Rafael. ¿Qué necesitas saber sobre su perfil profesional?",
+                    options: [{ text: "Sus Habilidades (Skills)", next: "skills" }, { text: "Logros y Experiencia", next: "achievements" }, { text: "Contactarlo", next: "contact" }]
+                },
+                skills: {
+                    msg: "Mmm... ¡sabe hacer de todo! Domina Python, C++, Java, bases de datos como SQL y MongoDB, e Inteligencia Artificial (redes neuronales, machine learning, RAG...). Yo apenas sé encender la computadora del sector 7G. ¿Quieres saber de sus logros o lo contactas?",
+                    options: [{ text: "Ver sus logros", next: "achievements" }, { text: "Contactarlo", next: "contact" }, { text: "Volver", next: "start" }]
+                },
+                achievements: {
+                    msg: "¡Es un cerebrito! Ganó el 2do lugar armando robots futboleros, hizo un agente autónomo que resuelve laberintos, y hasta clasifica galaxias con redes convolucionales. ¡Ah! Y habla inglés y francés. ¡Suficiente para que lo contrates! ¿Te doy su correo?",
+                    options: [{ text: "Sí, dame su correo", next: "contact" }, { text: "Volver", next: "start" }]
+                },
+                contact: {
+                    msg: "¡Woohoo! Dinero para más cerveza Duff. Escríbele directo a: <br><br><b>irving.r.salgado@gmail.com</b><br><br>Yo me voy a la Taberna de Moe.",
+                    options: [{ text: "Volver al inicio", next: "start" }]
+                },
+                thinking: "Pensando en rosquillas..."
+            },
+            en: {
+                start: {
+                    msg: "Mmm... algorithms! I mean, Hello! I'm I. Rafael's assistant. What do you need to know about his professional profile?",
+                    options: [{ text: "His Skills", next: "skills" }, { text: "Achievements & Experience", next: "achievements" }, { text: "Contact Him", next: "contact" }]
+                },
+                skills: {
+                    msg: "Mmm... he can do everything! He masters Python, C++, Java, databases like SQL and MongoDB, and Artificial Intelligence (neural networks, machine learning, RAG...). I barely know how to turn on the Sector 7G computer. Want to hear about his achievements or contact him?",
+                    options: [{ text: "See achievements", next: "achievements" }, { text: "Contact him", next: "contact" }, { text: "Back", next: "start" }]
+                },
+                achievements: {
+                    msg: "He's a brainiac! He won 2nd place building soccer robots, made an autonomous agent that solves mazes, and even classifies galaxies with convolutional networks. Oh! And he speaks English and French. Enough for you to hire him! Should I give you his email?",
+                    options: [{ text: "Yes, give me his email", next: "contact" }, { text: "Back", next: "start" }]
+                },
+                contact: {
+                    msg: "Woohoo! Money for more Duff beer. Email him directly at: <br><br><b>irving.r.salgado@gmail.com</b><br><br>I'm going to Moe's Tavern.",
+                    options: [{ text: "Back to start", next: "start" }]
+                },
+                thinking: "Thinking about donuts..."
+            }
+        };
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatOptionsArea = document.getElementById('chat-options-area');
+
+        function toggleChat() {
+            const chat = document.getElementById('chatbot-window');
+            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function initChat() {
+            chatMessages.innerHTML = '';
+            showBotNode('start');
+        }
+
+        function showBotNode(nodeKey) {
+            const node = chatFlow[currentLang][nodeKey];
+            chatOptionsArea.innerHTML = '';
+            chatMessages.innerHTML += `<div class="msg-bot">${node.msg}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            node.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'chat-option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => handleUserChoice(opt.text, opt.next);
+                chatOptionsArea.appendChild(btn);
+            });
+        }
+
+        function handleUserChoice(userText, nextNodeKey) {
+            chatOptionsArea.innerHTML = '';
+            chatMessages.innerHTML += `<div class="msg-user">${userText}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const thinkingId = "think-" + Date.now();
+            chatMessages.innerHTML += `<div id="${thinkingId}" class="msg-thinking"><i class="fas fa-spinner fa-spin mr-2"></i> ${chatFlow[currentLang].thinking}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                document.getElementById(thinkingId).remove();
+                showBotNode(nextNodeKey);
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>
